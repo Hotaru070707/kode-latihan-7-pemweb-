@@ -7,6 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
       background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 60%, #e3f2fd 100%);
@@ -210,7 +211,7 @@
 
               <!-- Submit Button -->
               <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-save">
+                <button type="button" id="btnSimpan" class="btn btn-primary btn-save">
                   <i class="bi bi-check-circle me-2"></i> Simpan Data Pegawai
                 </button>
               </div>
@@ -225,5 +226,55 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('btnSimpan').addEventListener('click', function () {
+      const nama    = document.getElementById('nama').value.trim();
+      const jabatan = document.getElementById('jabatan').value.trim();
+      const umur    = document.getElementById('umur').value.trim();
+      const alamat  = document.getElementById('alamat').value.trim();
+
+      // Validasi semua field terisi
+      if (!nama || !jabatan || !umur || !alamat) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Data Belum Lengkap!',
+          text: 'Harap isi semua kolom sebelum menyimpan data.',
+          confirmButtonColor: '#0d6efd',
+          confirmButtonText: 'Oke, Mengerti'
+        });
+        return;
+      }
+
+      // Konfirmasi simpan
+      Swal.fire({
+        icon: 'question',
+        title: 'Simpan Data Pegawai?',
+        html: `Apakah Anda yakin ingin menyimpan data berikut?<br><br>
+               <b>Nama&nbsp;&nbsp;&nbsp;:</b> ${nama}<br>
+               <b>Jabatan :</b> ${jabatan}<br>
+               <b>Umur&nbsp;&nbsp;&nbsp;:</b> ${umur} Tahun<br>
+               <b>Alamat&nbsp;:</b> ${alamat}`,
+        showCancelButton: true,
+        confirmButtonColor: '#0d6efd',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="bi bi-check-circle"></i> Ya, Simpan!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Tampilkan loading
+          Swal.fire({
+            title: 'Menyimpan...',
+            text: 'Mohon tunggu sebentar.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => { Swal.showLoading(); }
+          });
+          // Submit form
+          document.querySelector('form').submit();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
